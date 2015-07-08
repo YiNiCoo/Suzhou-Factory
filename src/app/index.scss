@@ -2,7 +2,8 @@
  *  If you want to override some foundation settings, you have to change values here.
  *  The list of settings values are listed here bower_components/foundation/scss/foundation/_settings.scss
  */
-$topbar-bg-color: #5AADBB;
+// $topbar-bg-color: #283435;
+@import './settings';
 
 /**
  *  The import of foundation is made manually because there is still no links of the
@@ -35,6 +36,28 @@ $topbar-bg-color: #5AADBB;
   img.right {
     width: 50px;
   }
+}
+.app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .container {
+    position: absolute;
+    top: $topbar-height;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+.e-menu {
+  display: block;
+  height: 100%;
+  background: #074e68 url(../assets/images/marquee-stars.svg);
+}
+.content {
+  overflow: auto;
 }
 
 /**
