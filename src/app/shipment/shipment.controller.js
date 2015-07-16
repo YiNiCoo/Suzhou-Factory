@@ -7,12 +7,38 @@
 
   /** @ngInject */
   function ShipmentController($scope, $http) {
-  	$scope.shipments = ['货物1','货物2','货物3','货物4','货物5','货物6','货物7','货物8','货物9','货物10','货物11'];
-	// $http.get(Setting.url).success( function(response) {
-	// 	$scope.rqdata = response; 
-	// });
-	$.get(Setting.url, function(data,status){
-		console.log("hello");
-	});
+    $scope.info = Setting.sendData;
+    $scope.keyName = 'dataJson';
+    $scope.config = {
+      method: 'GET',
+      url: Setting.url,
+      data: {}
+    };
+    $scope.sendInfo = '';
+    $scope.Get = function() {
+      var sendData = {};
+      sendData[$scope.keyName] = $scope.info;
+      $scope.sendInfo = '';
+      $scope.config.method = 'GET';
+      $scope.config.data = sendData;//JSON.parse($scope.info);
+      $http($scope.config).success(successCallback).error(errorCallback);
+    };
+    $scope.Post = function() {
+      var sendData = {};
+      sendData[$scope.keyName] = $scope.info;
+      $scope.sendInfo = JSON.stringify(sendData);
+      $scope.config.method = 'POST';
+      $scope.config.data = sendData;//JSON.parse($scope.info);
+      $http($scope.config).success(successCallback).error(errorCallback);
+    };
+
+    return;
+    function successCallback(data, status, headers, config) {
+      $scope.response=JSON.stringify(data);
+    }
+    function errorCallback(data, status, headers, config) {
+      $scope.response=JSON.stringify(data);
+    }
+
   }
 })();
