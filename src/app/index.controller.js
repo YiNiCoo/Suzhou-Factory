@@ -7,6 +7,6 @@
 
   /** @ngInject */
   function IndexController($scope) {
-    $scope.menus = ['进货','出货','进账','出账'];
+    
   }
 })();

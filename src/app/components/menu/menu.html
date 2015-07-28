@@ -1,5 +1,9 @@
 <menu>
-	<ul>
-		<li ng-repeat="menu in menus">{{menu}}</li>
-	</ul>
+    <accordion close-others="false">
+        <accordion-group heading="{{menu.title}}" ng-repeat="menu in menus">
+        	<ul>
+        		<li ng-repeat="list in menu.lists">{{list}}</li>
+        	</ul>
+        </accordion-group>
+    </accordion>
 </menu>

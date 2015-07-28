@@ -3,10 +3,10 @@
 
   angular
     .module('suzhou')
-    .controller('MainController', MainController);
+    .controller('DemoController', DemoController);
 
   /** @ngInject */
-  function MainController($timeout, webDevTec, toastr) {
+  function DemoController($timeout, webDevTec, toastr) {
     var vm = this;
 
     vm.awesomeThings = [];
