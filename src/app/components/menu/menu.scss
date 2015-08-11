@@ -9,22 +9,10 @@ menu {
 
 .accordion {
 	dd {
-		// border-bottom: 1px solid #999;
 		>a {
 			border-bottom: 1px solid #ccc;
 			position: relative;
-			// margin-right: 1rem;
-			// &:after {
-			// 	content: '';
-			// 	position: absolute;
-			// 	height: 3.5rem;
-			// 	width: 1rem;
-			// 	top: 0;
-			// 	left: 100%;
-			// 	border-left: 1rem solid #5C8D9E;
-			// 	border-top: 1.75rem solid transparent;
-			// 	border-bottom: 1.75rem solid transparent;
-			// }
+			color: #FFF;
 		}
 		.content {
 			padding: 0;
@@ -32,8 +20,12 @@ menu {
 				margin: 0;
 				list-style: none;
 				li {
-					padding: 1rem;
 					border-bottom: 1px solid #5C8D9E;
+					a {
+						display: block;
+						padding: 1rem;
+						color: #666;
+					}
 				}
 				li:last-child {
 					border: none;

@@ -1,8 +1,10 @@
 <menu>
-    <accordion close-others="false">
-        <accordion-group heading="{{menu.title}}" ng-repeat="menu in menus">
+    <accordion close-others="false" ng-init="menus[0].open = true">
+        <accordion-group heading="{{menu.name}}" ng-repeat="menu in menus"  is-open="menu.open || false">
         	<ul>
-        		<li ng-repeat="list in menu.lists">{{list}}</li>
+        		<li ng-repeat="child in menu.children">
+        			<a ui-sref="{{child.value | filterroute: statename}}" ng-bind=child.name></a>
+        		</li>
         	</ul>
         </accordion-group>
     </accordion>

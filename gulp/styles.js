@@ -33,6 +33,10 @@ gulp.task('styles', function () {
 
   var cssFilter = $.filter('**/*.css');
 
+  var autoprefixer_config = {
+    browsers: ['> 1%', 'last 2 versions', 'Firefox >= 20', 'Opera 12.1']
+  };
+
   return gulp.src([
     path.join(conf.paths.src, '/app/index.scss')
   ])
@@ -41,7 +45,7 @@ gulp.task('styles', function () {
     .pipe($.rubySass(sassOptions)).on('error', conf.errorHandler('RubySass'))
     .pipe(cssFilter)
     .pipe($.sourcemaps.init({ loadMaps: true }))
-    .pipe($.autoprefixer()).on('error', conf.errorHandler('Autoprefixer'))
+    .pipe($.autoprefixer(autoprefixer_config)).on('error', conf.errorHandler('Autoprefixer'))
     .pipe($.sourcemaps.write())
     .pipe(cssFilter.restore())
     .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app/')))

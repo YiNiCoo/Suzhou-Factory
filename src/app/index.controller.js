@@ -7,6 +7,7 @@
 
   /** @ngInject */
   function IndexController($scope) {
-    
+    $(document).foundation();
+    $(document).foundation('tooltip', 'reflow');
   }
 })();

@@ -1,54 +1,80 @@
 (function() {
-  'use strict';
+    'use strict';
 
-  angular
-    .module('suzhou')
-    .controller('LoginController', LoginController);
+    var suzhou = angular.module('suzhou');
+    suzhou.controller('LoginController', LoginController);
+ 
 
-  /** @ngInject */
-  function LoginController($scope, $http) {
-    $scope.login = {
-      username: '',
-      password: '',
-      phoneid: ''
-    };
-    $scope.keyName = 'dataJson';
-    $scope.config = {
-      method: 'GET',
-      url: Setting.loginUrl,
-      data: {}
-    };
-    $scope.sendInfo = '';
-    $scope.Get = function() {
-      var sendData = {};
-      sendData[$scope.keyName] = $scope.info;
-      $scope.sendInfo = '';
-      $scope.config.method = 'GET';
-      $scope.config.data = sendData;//JSON.parse($scope.info);
-      $http($scope.config).success(successCallback).error(errorCallback);
-    };
-    $scope.Post = function() {
-      var sendData = {};
-      sendData[$scope.keyName] = $scope.login;
-      $scope.sendInfo = JSON.stringify(sendData);
-      console.log($scope.sendInfo);
-      $scope.config.method = 'POST';
-      $scope.config.data = sendData;
-      $http($scope.config).success(successCallback).error(errorCallback);
-    };
+    /** @ngInject */
+    function LoginController($rootScope, $scope, $http, $state, Tools) {
+        $('.content').validate({
+            submitHandler: function(form) {
+                $(form).ajaxSubmit();
+            },
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 2
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                }
+            },
+            messages: {
+                username: {
+                    required: "请输入用户名",
+                    minlength: "用户名太短，必须两位以上"
+                },
+                password: {
+                    required: "请输入密码",
+                    minlength: "密码必须六位以上"
+                }
+            }
+        });
+        $scope.user = Setting.login.data || {
+            username: '',
+            password: '',
+        };
 
-    return;
-    function successCallback(data, status, headers, config) {
-      $scope.response=JSON.stringify(data);
+        $scope.Post = function() {
+            $http.post(Setting.host + Setting.login.url, {user: $scope.user})
+                .success(successCallback)
+                .error(errorCallback);
+        };
+
+        return;
+
+        function successCallback(data, status, headers, config) {
+            data.user.rights = Tools.transtoTree(data.user.rights);
+            sessionStorage.user = JSON.stringify(data.user);
+            $state.go('main');
+            // $httpProvider.defaults.headers.common.Cookie = getSessionId();
+            // console.log(getSessionId());
+        }
+
+        function errorCallback(data, status, headers, config) {
+            if (TestData.debug) {
+                sessionStorage.user = JSON.stringify(TestData.login);
+                $state.go('main.default');
+            }
+            $scope.response = JSON.stringify(data);
+        }
+
+        // function getSessionId() {
+        //     var c_name = 'JSESSIONID';
+        //     if (document.cookie.length > 0) {
+        //         c_start = document.cookie.indexOf(c_name + "=")
+        //         if (c_start != -1) {
+        //             c_start = c_start + c_name.length + 1
+        //             c_end = document.cookie.indexOf(";", c_start)
+        //             if (c_end == -1) c_end = document.cookie.length
+        //             return unescape(document.cookie.substring(c_start, c_end));
+        //         }
+        //     }
+        // }
+
+
     }
-    function errorCallback(data, status, headers, config) {
-      $scope.response=JSON.stringify(data);
-    }
-    function checkInput() {
-      if ($scope.login.username == '') {
 
-      }
-    }
-
-  }
 })();

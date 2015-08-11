@@ -1,0 +1,59 @@
+<section class="rights">
+    <div class="search">
+        <label>名称<input type="text" ng-model="searchInfo.right.name"></label>   
+        <label>value值<input type="text" ng-model="searchInfo.right.value"></label>   
+        <div class="button-container">
+            <div class="button tiny" ng-click='search()'>查询</div>
+            <div class="button tiny" ng-click='add()'>添加</div>
+        </div>
+    </div>
+    <table>
+        <!--caption>Most Expensive Sandwiches by City</caption-->
+        <thead>
+            <tr>
+            	<th ng-repeat="riH in tableHead" ng-bind="riH"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="right in data.rights" ng-init="right.editable=true">
+                <td>
+                	<input type="text" ng-model="right.name" ng-disabled="right.editable" pattern="[0-9]">
+                </td>
+                <td>
+                	<input type="text" ng-model="right.value" ng-disabled="right.editable">
+                </td>
+                <td>
+                    <input type="text" ng-model="right.parentname" ng-disabled="right.editable">
+                    <!--div ng-if="right.parentname">
+                        <a class="button tiny dropdown" dropdown-toggle="#dropdown-example-2" ng-bind="right.parentname"></a>
+                        <ul id="dropdown-example-2" class="f-dropdown">
+                            <li ng-repeat="sright in selectData.rights">
+                                <a href="" ng-bind="sright.name"></a>
+                                <ul ng-if="sright.children | isarray">
+                                    <li ng-repeat="ssright in sright.children"><a href="" ng-bind="ssright.name"></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div-->
+                </td>
+                <td >
+                	<div class="button tiny" ng-click="edit()">编辑</div><div class="button tiny" ng-click="delete()">删除</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <h3>I'm a modal!</h3>
+        <ul>
+            <li ng-repeat="item in items">
+                <a ng-click="selected.item = item">{{ item }}</a>
+            </li>
+        </ul>
+        <p>Selected: <b>{{ selected.item }}</b></p>
+        <button class="button" ng-click="ok()">OK</button>
+        <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+    </script>
+    <button class="button" ng-click="open()">Open me!</button>
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+</section>
