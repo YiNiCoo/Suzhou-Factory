@@ -20,6 +20,9 @@
                 onEnter: onEnter,
                 onExit: onExit,
                 resolve: {
+                    data: function() {
+                        return {};
+                    },
                     pageInfo: function(){
                         return {
                             name: '员工',
@@ -27,6 +30,11 @@
                             active: true
                         };
                     }
+                },
+                data: {
+                    name: '客户',
+                    state: 'main.user',
+                    active: true
                 },
             })
             .state('main.client', {
@@ -36,6 +44,9 @@
                 onEnter: onEnter,
                 onExit: onExit,
                 resolve: {
+                    data: function() {
+                        return {};
+                    },
                     pageInfo: function(){
                         return {
                             name: '客户',
@@ -43,6 +54,11 @@
                             active: true
                         };
                     }
+                },
+                data: {
+                    name: '客户',
+                    state: 'main.client',
+                    active: true
                 },
             })
             .state('main.supplier', {
@@ -52,17 +68,21 @@
                 onEnter: onEnter,
                 onExit: onExit,
                 resolve: {
-                    data: function($state) {
-                        console.log($state);
+                    data: function() {
                         return {};
                     },
                     pageInfo: function($state){
                         return {
                             name: '供应商',
-                            state: $state.current.name,
+                            state: 'main.supplier',
                             active: true
                         };
                     }
+                },
+                data: {
+                    name: '客户',
+                    state: 'main.supplier',
+                    active: true
                 },
             })
             .state('login', {
@@ -104,41 +124,16 @@
 
         $urlRouterProvider.otherwise('/');
 
-        function prepareData(DataService) {
-            pageInfo.active = true;
-            var addrs = pageInfo.state.split('.');
-            DataService[addrs[0]].pages.open(pageInfo);
-            var temp = DataService;
-            for (var i = 0; i < addrs.length; i++) {
-                if (!temp[addrs[i]]) {
-                    temp[addrs[i]] = {};
-                }
-                temp = temp[addrs[i]];
-            }
-            if (_.isEmpty(temp)) {
-
-            }
-            
-        }
 
         function onEnter(pageInfo, DataService) {
             pageInfo.active = true;
             var addrs = pageInfo.state.split('.');
             DataService[addrs[0]].pages.open(pageInfo);
-            var temp = DataService;
-            for (var i = 0; i < addrs.length; i++) {
-                if (!temp[addrs[i]]) {
-                    temp[addrs[i]] = {};
-                }
-                temp = temp[addrs[i]];
-            }
-            if (_.isEmpty(temp)) {
-
-            }
-
         }
 
         function onExit (pageInfo, DataService){
+
+            // 关闭Tab标签页
             pageInfo.active = false;
             var list = DataService[pageInfo.state.split('.')[0]].pages.list;
             for (var i = 0; i < list.length; i++) {

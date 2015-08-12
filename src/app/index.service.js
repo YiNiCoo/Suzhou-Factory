@@ -28,6 +28,39 @@
                     }
                 },
             },
+            mount: function(state, data) {
+                var addrs = state.split('.');
+                var temp = this;
+                for (var i = 0; i < addrs.length-1; i++) {
+                    if (!temp[addrs[i]]) {
+                        temp[addrs[i]] = {};
+                    }
+                    temp = temp[addrs[i]];
+                }
+                temp[addrs[addrs.length-1]] = data;
+            },
+            fetch: function(state) {
+                var addrs = state.split('.');
+                var temp = this;
+                for (var i = 0; i < addrs.length; i++) {
+                    if (!temp[addrs[i]]) {
+                        temp[addrs[i]] = {};
+                    }
+                    temp = temp[addrs[i]];
+                }
+                return temp;
+            },
+            unmout: function(state) {
+                var addrs = state.split('.');
+                var temp = this;
+                for (var i = 0; i < addrs.length-1; i++) {
+                    if (!temp[addrs[i]]) {
+                        temp[addrs[i]] = {};
+                    }
+                    temp = temp[addrs[i]];
+                }
+                temp[addrs[addrs.length-1]] = null;
+            }
         };
     })
     .factory('TabPageService', function(){

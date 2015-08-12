@@ -56,7 +56,7 @@
         function errorCallback(data, status, headers, config) {
             if (TestData.debug) {
                 sessionStorage.user = JSON.stringify(TestData.login);
-                $state.go('main.default');
+                $state.go('main');
             }
             $scope.response = JSON.stringify(data);
         }

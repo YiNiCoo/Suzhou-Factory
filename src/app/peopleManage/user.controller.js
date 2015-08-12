@@ -7,11 +7,6 @@
 
     /** @ngInject */
     function UserController($scope, $http, $state, DataService, Tools) {
-        var pageInfo = {
-            name: '员工',
-            state: $state.current.name,
-            active: true,
-        };
     	var initData = {
  			employeeHead: ['员工编号', '姓名', '电话', '操作'],
  			employee: [{
@@ -58,26 +53,13 @@
             });
         };
 
-        // -- 初始化数据 有则用本地的，无则请求网络的
-        var addr = $state.current.name.split('.');
-        var temp = DataService;
-        for (var i = 0; i < addr.length; i++) {
-            if (temp[addr[i]]) {
-                temp = temp[addr[i]];
-            } else {
-                temp = null;
-                break;
-            }
-        };
-        if (!temp) {
-            $scope.search(function(){
-                // $scope.selectData = Tools.clone($scope.data);
-                // $scope.selectData.rights = Tools.transtoTree($scope.selectData.rights);
+        // 将挂载在数据服务上的数据取回，若为空，则请求网络数据，并挂载.
+        $scope.data = DataService.fetch($state.current.name);
+        if (_.isEmpty($scope.data)) {
+            $scope.search(function() {
+                DataService.mount($state.current.name, $scope.data);
             });
-        } else {
-            $scope.data = temp;
         }
-        // DataService[addr[0]].pages.open(pageInfo);
 
 
         // -- 页面相关数据以及控制

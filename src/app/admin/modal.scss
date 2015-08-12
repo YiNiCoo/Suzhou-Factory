@@ -1,0 +1,22 @@
+.reveal-modal {
+	max-width: 960px;
+
+	.modal-content {
+		display: flex;
+		border: 1px solid #999;
+		padding: 10px;
+		margin-bottom: 10px;
+		>div {
+			margin: 0 10px;
+		}
+		.modal-content-left {
+			flex: 2;
+		}
+		.modal-content-right {
+			flex: 3;
+		}
+		.tree-container {
+			border: 1px solid #ddd;
+		}
+	}
+}

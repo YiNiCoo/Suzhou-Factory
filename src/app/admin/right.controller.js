@@ -4,18 +4,7 @@
     angular
         .module('suzhou')
         .controller('RightController', RightController)
-        .controller('ModalInstanceCtrl', function($scope, $modalInstance, modal) {
-
-            $scope.modal = modal;
-
-            $scope.ok = function() {
-                $modalInstance.close($scope.modal);
-            };
-
-            $scope.cancel = function() {
-                $modalInstance.dismiss('cancel');
-            };
-        });
+        .controller('ModalInstanceCtrl', ModalInstanceCtrl);
 
     /** @ngInject */
     function RightController($scope, $http, $modal, $log, Tools) {
@@ -48,15 +37,18 @@
         $scope.search(function() {
             $scope.selectData = Tools.clone($scope.data);
             $scope.selectData.rights = Tools.transtoTree($scope.selectData.rights);
+
+
+
+            // 准备树形选项
+            $scope.tree = Tools.clone($scope.data);
+            $scope.tree = Tools.transtoTree($scope.tree);
         });
-
-
-
-
         $scope.edit = function() {
             var modal = {
                 title: '编辑',
                 right: this.right,
+                tree: $scope.tree
             };
             var modalInstance = $modal.open({
                 templateUrl: 'app/admin/modal.html',
@@ -76,15 +68,36 @@
         };
 
         $scope.add = function() {
-            $scope.data.rights.push($scope.addRight);
-
-            $scope.addRight = {
+            var addRight = {
                 id: '',
                 name: '',
                 value: '',
                 parentid: '',
                 parentname: ''
             };
+
+            var modal = {
+                title: '添加',
+                right: addRight,
+                option: option
+            };
+            var modalInstance = $modal.open({
+                templateUrl: 'app/admin/modal.html',
+                controller: 'ModalInstanceCtrl',
+                resolve: {
+                    modal: function() {
+                        return modal;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(selectedItem) {
+                $scope.selected = selectedItem;
+            }, function() {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+
+            // $scope.data.rights.push($scope.addRight);
         };
         $scope.delete = function() {
             $scope.data.rights = _.without($scope.data.rights, this.right);
@@ -120,4 +133,18 @@
         // };
 
     }
+
+    function ModalInstanceCtrl($scope, $modalInstance, modal) {
+
+        $scope.modal = modal;
+
+        $scope.ok = function() {
+            $modalInstance.close($scope.modal);
+        };
+
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
 })();

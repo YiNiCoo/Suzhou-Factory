@@ -1,10 +1,27 @@
 <h4 ng-bind="modal.title"></h4>
 <div class="modal-content">
-	<label>名称：<input type="text"></label>
-	<label>Value值：<input type="text"></label>
-	<label>Value值：<input type="text"></label>
+    <div class="modal-content-left">
+        <label>名称：
+            <input type="text">
+        </label>
+        <label>Value值：
+            <input type="text">
+        </label>
+        <label>Value值：
+            <input type="text">
+        </label>
+    </div>
+    <div class="modal-content-right">
+    	<label for="modal-tree">父名称</label>
+    	<div id="modal-tree" class="tree-container">
+    		<div class="tree" ng-reap="list in tree">
+    			<div class="tree-head"></div>
+    			<ul>
+    				<li></li>
+    			</ul>
+    		</div>
+    	</div>
+    </div>
 </div>
-
-<p>Selected: <b>{{ selected.item }}</b></p>
 <button class="button" ng-click="ok()">OK</button>
 <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>

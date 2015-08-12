@@ -32,6 +32,7 @@
     function linkFunc(scope, el, attr, vm) {
       // el.addClass('menu');
       // el.addClass('fold');
+      // console.dir(el);
     }
 
   }
