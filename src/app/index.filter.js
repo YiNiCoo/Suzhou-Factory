@@ -31,6 +31,11 @@
                 return false;
             }
         }
+    })
+    .filter("getDataFromStr",function(){
+        return function(input){
+            return Date.parse(input);
+        }
     });
 
 })();

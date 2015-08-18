@@ -87,7 +87,7 @@
                             break;
                         }
                     }
-                    if (parentid == 0) {
+                    if (!parentid) {
                         tree.push(lists[i]);
                     }
                 }

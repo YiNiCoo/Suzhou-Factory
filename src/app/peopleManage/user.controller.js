@@ -7,6 +7,7 @@
 
     /** @ngInject */
     function UserController($scope, $http, $state, DataService, Tools) {
+        $scope.testt = 'Thu Jul 30 16:30:42 CST 2015';
     	var initData = {
  			employeeHead: ['员工编号', '姓名', '电话', '操作'],
  			employee: [{

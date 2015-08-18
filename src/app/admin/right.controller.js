@@ -16,60 +16,44 @@
             }
         };
 
-        $scope.search = function(callback) {
+        $scope.search = function() {
+            $scope.msg = {
+                message: '',
+                success: true
+            };
             $http.post(Setting.host + 'right/index', $scope.searchInfo).success(function(data) {
                 if (data.rights && !(data.rights instanceof Array)) {
                     data.rights = [data.rights];
                 }
                 $scope.data = data;
-                if (callback) {
-                    callback();
-                }
+                $scope.tree = Tools.clone($scope.data).rights;
+                $scope.tree = Tools.transtoTree($scope.tree);
+
             }).error(function(data) {
                 if (TestData.debug) {
                     $scope.data = TestData.right.index;
-                    if (callback) {
-                        callback();
-                    }
                 }
             });
         };
-        $scope.search(function() {
-            $scope.selectData = Tools.clone($scope.data);
-            $scope.selectData.rights = Tools.transtoTree($scope.selectData.rights);
 
-
-
-            // 准备树形选项
-            $scope.tree = Tools.clone($scope.data);
-            $scope.tree = Tools.transtoTree($scope.tree);
-        });
         $scope.edit = function() {
             var modal = {
                 title: '编辑',
                 right: this.right,
                 tree: $scope.tree
             };
-            var modalInstance = $modal.open({
-                templateUrl: 'app/admin/modal.html',
-                controller: 'ModalInstanceCtrl',
-                resolve: {
-                    modal: function() {
-                        return modal;
-                    }
-                }
-            });
 
-            modalInstance.result.then(function(selectedItem) {
-                $scope.selected = selectedItem;
-            }, function() {
-                $log.info('Modal dismissed at: ' + new Date());
+            openModal(modal, function(data) {
+                //刷新页面
+                $scope.search();
+            }, function(data) {
+
             });
         };
 
         $scope.add = function() {
             var addRight = {
-                id: '',
+                id: -1,
                 name: '',
                 value: '',
                 parentid: '',
@@ -79,72 +63,112 @@
             var modal = {
                 title: '添加',
                 right: addRight,
-                option: option
+                tree: $scope.tree
             };
+
+            openModal(modal, function(data) {
+                //刷新页面
+                $scope.search();
+            }, function(data) {
+
+            });
+        };
+
+        //刷新页面
+        $scope.search();
+
+
+        $scope.delete = function() {
+            var deleteInfo = {
+                right: {
+                    id: this.right.id
+                }
+            };
+
+            $http.post(Setting.host + 'right/delete', deleteInfo).success(function(data) {
+                if (data.result.code = "000000") {
+                    $scope.msg.success = true;
+                    $scope.msg.message = data.result.message;
+                    //刷新页面
+                    $scope.search();
+                } else {
+                    $scope.msg.success = false;
+                    $scope.msg.message = data.result.message;
+                }
+            }).error(function(data) {
+                $scope.msg.success = false;
+                $scope.msg.message = "网络异常，修改失败";
+            });
+        };
+
+        function openModal(data, success, error) {
             var modalInstance = $modal.open({
                 templateUrl: 'app/admin/modal.html',
                 controller: 'ModalInstanceCtrl',
+                backdrop: false,
                 resolve: {
                     modal: function() {
-                        return modal;
+                        return data;
                     }
                 }
             });
 
-            modalInstance.result.then(function(selectedItem) {
-                $scope.selected = selectedItem;
-            }, function() {
-                $log.info('Modal dismissed at: ' + new Date());
+            modalInstance.result.then(function(data) {
+                if (success) {
+                    success(data);
+                }
+            }, function(data) {
+                if (error) {
+                    error(data);
+                }
             });
-
-            // $scope.data.rights.push($scope.addRight);
-        };
-        $scope.delete = function() {
-            $scope.data.rights = _.without($scope.data.rights, this.right);
-        };
-
-        function Right () {}
-        Right.prototype = {
-            id: '',
-            name: '',
-            value: '',
-            parentid: '',
-            parentname: ''
-        };
-
-        // -- modal config --
-        // $scope.open = function() {
-
-        //     var modalInstance = $modal.open({
-        //         templateUrl: 'app/admin/modal.html',
-        //         // controller: 'ModalInstanceCtrl',
-        //         resolve: {
-        //             modal: function() {
-        //                 return $scope.modal;
-        //             }
-        //         }
-        //     });
-
-        //     modalInstance.result.then(function(selectedItem) {
-        //         $scope.selected = selectedItem;
-        //     }, function() {
-        //         $log.info('Modal dismissed at: ' + new Date());
-        //     });
-        // };
-
+        }
     }
 
-    function ModalInstanceCtrl($scope, $modalInstance, modal) {
-
+    function ModalInstanceCtrl($scope, $modalInstance, $http, modal) {
+        $scope.msg = {
+            message: '',
+            success: true
+        };
         $scope.modal = modal;
 
         $scope.ok = function() {
-            $modalInstance.close($scope.modal);
+            $scope.msg.success = true;
+            $scope.msg.message = '......';
+            // 验证
+            
+            update({right: modal.right}, function (data) {
+                if (data.result.code == '000000') {
+                    $scope.msg.success = true;
+                    $scope.msg.message = $scope.modal.title + data.result.message;
+                    setTimeout((function(){
+                        var instance = $modalInstance;
+                        return function() {
+                            instance.close();
+                        };
+                    })(), 100);
+                    // $modalInstance.close();
+                } else {
+                    $scope.msg.success = false;
+                    $scope.msg.message = data.result.message;
+                }
+            }, function (data) {
+                $scope.msg.success = false;
+                $scope.msg.message = '网络异常，' + $scope.modal.title + '失败';
+            });
         };
 
         $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
+            $modalInstance.dismiss();
         };
+
+        function update(updateInfo, success, error) {
+            $http.post(Setting.host + 'right/update', updateInfo).success(function(data) {
+                if (success) success(data);
+            }).error(function(data) {
+                if (error) error(data);
+            });
+        }
     }
 
 })();
